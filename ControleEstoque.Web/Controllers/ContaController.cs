@@ -26,7 +26,7 @@ namespace ControleEstoque.Web.Controllers
                 return View(login);
             }
 
-            var achou = (login.Usuario == "lucasmaritan" && login.Senha == "123");
+            var achou = UsuarioModel.ValidarUsuario(login.Usuario, login.Senha);
 
             if (achou)
             {
@@ -54,8 +54,6 @@ namespace ControleEstoque.Web.Controllers
             FormsAuthentication.SignOut();
             return RedirectToAction("Index", "Home");
         }
-
-
 
     }
 
