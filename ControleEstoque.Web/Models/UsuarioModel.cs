@@ -8,7 +8,7 @@ namespace ControleEstoque.Web.Models
 {
     public class UsuarioModel
     {
-
+         
         public static bool ValidarUsuario(string login, string senha)
         {
 
