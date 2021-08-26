@@ -52,7 +52,7 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr>
+                            <tr data-id="@item.Id">
                                 <td>@item.Nome</td>
                                 <td>@{var ativo = (item.Ativo ? "SIM" : "NÃO"); }@ativo</td>
                                 <td>
@@ -67,6 +67,7 @@
         </div>
     </section>
 </div>
+@Html.Hidden("id_cadastro")
 <div id="modal_cadastro" class="container-fluid form-horizontal invisivel" role="dialog">
     <fieldset>
         <div class="row">
@@ -97,23 +98,112 @@
 </div>
 @section Scripts{
     <script>
-        $(document).on('click', '#btn-incluir', function () {
-            var modal_cadastro = $('modal_cadastro');
+        function abrirForm(dados) {
+
+            $('#id_cadastro').val(dados.Id);
+            $('#txt_nome').val(dados.Nome);
+            $('#cbx_ativo').prop('checked', dados.Ativo);
+
+            var modal_cadastro = $('#modal_cadastro');
 
             bootbox.dialog({
                 title: '@ViewBag.Title',
                 message: modal_cadastro
             })
-            .on('show.bs.modal', function () {
-                modal_cadastro.show();
+                .on('shown.bs.modal', function () {
+                    modal_cadastro.show(0, function () {
+                        $('#txt_nome').focus();
+                    });
+                })
+                .on('hidden.bs.modal', function () {
+                    modal_cadastro.hide().appendTo('body');
+                });
+        }
+
+        function criar_linha_grid(dados)
+        {
+            var ret =
+                '<tr data-id=' + dados.Id + '>' +
+                '<td>' + dados.Nome + '</td>' +
+                '<td>' + (dados.Ativo ? 'SIM' : 'NÃO') + '</td>' +
+                '<td>' +
+                '<a class="btn btn-primary btn-alterar" role="button" style="margin-rigth: 3px"><i class="glyphicon glyphicon-pencil"></i>Alterar</a>' +
+                '<a class="btn btn-danger btn-excluir" role="button"><i class="glyphicon glyphicon-trash"></i>Excluir</a>' +
+                '</td>' +
+                '</tr>';
+
+            return ret;
+        }
+
+        $(document).on('click', '#btn-incluir', function () {
+
+            abrirForm({ Id: 0, Nome: '', Ativo: true });
+        })
+            .on('click', '.btn-alterar', function () {
+                var btn = $(this),
+                    id = btn.closest('tr').attr('data-id'),
+                    url = '@Url.Action("RecuperarGrupoProduto", "Cadastro")',
+                    param = { 'id': id };
+                $.post(url, param, function (Response) {
+                    if (Response) {
+                        abrirForm(Response);
+                    }
+                });
+            })
+            .on('click', '.btn-excluir', function () {
+
+                var btn = $(this),
+                    tr = btn.closest('tr'),
+                    id = tr.attr('data-id'),
+                    url = '@Url.Action("ExcluirGrupoProduto", "Cadastro")',
+                    param = { 'id': id };
+
+                bootbox.confirm({
+                    message: "Realmente deseja excluir o grupo de produto ?",
+                    buttons: {
+                        confirm: {
+                            label: 'Sim',
+                            className: 'btn-succsess'
+                        },
+                        cancel: {
+                            label: 'Não',
+                            className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+
+                            $.post(url, param, function (Response) {
+                                if (Response) {
+                                    tr.remove();
+                                }
+                            });
+                        }
+                    }
+                });
+            })
+            .on('click', '#btn-confirmar', function () {
+                var btn = $(this),
+                    url = '@Url.Action("SalvarGrupoProduto", "Cadastro")',
+                    param =
+                    {
+                        Id: $('#id_cadastro').val(),
+                        Nome: $('#txt_nome').val(),
+                        Ativo: $('#cbx_ativo').prop('checked')
+                    };
+                $.post(url, param, function (Response) {
+                    if (Response) {
+                        if (param.Id == 0)
+                        {
+                            var table = $('#grid-cadastro').find('tbody'),
+                                linha = criar_linha_grid(Response);
+                            table.append(linha);
+                        }
+
+                        $('#modal_cadastro').parents('.bootbox').modal('hide');
+                    }
+                });
             });
-        })
-        .on('click', '.btn-alterar', function () {
-                alert('2');
-        })
-        .on('click', '.btn-excluir', function () {
-                alert('3');
-        })
     </script>
 }
 
