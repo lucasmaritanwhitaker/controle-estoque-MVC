@@ -201,7 +201,7 @@
                             table.append(linha);
                         }
                         else {
-                            var linha = $('#grid-cadastro').find('tr[data-id' + param.Id + ']').find('td');
+                            var linha = $('#grid-cadastro').find('tr[data-id= ' + param.Id + ']' + ' td');
 
                             linha
                                 .eq(0).html(param.Nome).end() 
@@ -209,6 +209,7 @@
                         }
 
                         $('#modal_cadastro').parents('.bootbox').modal('hide');
+                                
                     }
                 });
             });
