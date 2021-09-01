@@ -109,6 +109,11 @@
 
             var modal_cadastro = $('#modal_cadastro');
 
+            $('#msg_mensagem_aviso').empty();
+            $('#msg_aviso').hide();
+            $('#msg_mensagem_aviso').hide();
+            $('#msg_erro').hide();
+
             bootbox.dialog({
                 title: '@ViewBag.Title',
                 message: modal_cadastro
@@ -216,14 +221,14 @@
                     }
                     else if (Response.Resultado == "ERRO") {
                         $('#msg_aviso').hide();
-                        $('#meg_mensagem_aviso').hide();
+                        $('#msg_mensagem_aviso').hide();
                         $('#msg_erro').show();
                     }
                     else if (Response.Resultado == "AVISO") {
                         $('#msg_mensagem_aviso').empty();
                         $('#msg_mensagem_aviso').html(formatar_mensagem_aviso(Response.Mensagens));
                         $('#msg_aviso').show();
-                        $('#meg_mensagem_aviso').show();
+                        $('#msg_mensagem_aviso').show();
                         $('#msg_erro').hide();
                     }
                 });
