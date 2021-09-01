@@ -69,6 +69,7 @@
 </div>
 @Html.Hidden("id_cadastro")
 <div id="modal_cadastro" class="container-fluid form-horizontal invisivel" role="dialog">
+    <div id="msg_mensagem_aviso" class="txt-danger"></div>
     <fieldset>
         <div class="row">
             <div class="form-group">
@@ -91,6 +92,8 @@
                         <a id="btn-sair" class="btn btn-default" role="button" data-dismiss="modal"><i class="glyphicon glyphicon-remove">Sair</i></a>
                         <a id="btn-confirmar" class="btn btn-primary" role="button"><i class="glyphicon glyphicon-ok">Salvar</i></a>
                     </div>
+                    <div id="msg_aviso" class="alert alert-warning invisivel"> Falta preencher os campos acima.</div>
+                    <div id="msg_erro" class="alert alert-danger invisivel">OOOPS ! Deu ruim...</div>
                 </div>
             </div>
         </div>
@@ -194,25 +197,45 @@
                     };
 
                 $.post(url, param, function (Response) {
-                    if (Response) {
+                    if (Response.Resultado == "OK") {
                         if (param.Id == 0) {
+                            param.Id = Response.IdSalvo;
                             var table = $('#grid-cadastro').find('tbody'),
-                                linha = criar_linha_grid(Response);
+                                linha = criar_linha_grid(param);
                             table.append(linha);
                         }
                         else {
                             var linha = $('#grid-cadastro').find('tr[data-id= ' + param.Id + ']' + ' td');
 
                             linha
-                                .eq(0).html(param.Nome).end() 
+                                .eq(0).html(param.Nome).end()
                                 .eq(1).html(param.Ativo ? 'SIM' : 'NÃO');
                         }
 
                         $('#modal_cadastro').parents('.bootbox').modal('hide');
-                                
+                    }
+                    else if (Response.Resultado == "ERRO") {
+                        $('#msg_aviso').hide();
+                        $('#meg_mensagem_aviso').hide();
+                        $('#msg_erro').show();
+                    }
+                    else if (Response.Resultado == "AVISO") {
+                        $('#msg_mensagem_aviso').empty();
+                        $('#msg_mensagem_aviso').html(formatar_mensagem_aviso(Response.Mensagens));
+                        $('#msg_aviso').show();
+                        $('#meg_mensagem_aviso').show();
+                        $('#msg_erro').hide();
                     }
                 });
-            });
+            }); 
+        function formatar_mensagem_aviso(mensagens) {
+            var ret = '';
+
+            for (var i = 0; i < mensagens.length; i++) {
+                ret += '<li>' + mensagens[i] + '</li>';
+            }
+            return '<ul>' + ret + '</ul>';
+        }
     </script>
 }
 
