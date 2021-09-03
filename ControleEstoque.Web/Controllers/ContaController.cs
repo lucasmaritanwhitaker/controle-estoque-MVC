@@ -1,10 +1,10 @@
-﻿using System;
+﻿using ControleEstoque.Web.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using ControleEstoque.Web.Models;
 
 namespace ControleEstoque.Web.Controllers
 {
@@ -42,8 +42,9 @@ namespace ControleEstoque.Web.Controllers
             }
             else
             {
-                ModelState.AddModelError("", "Login Inválido");
+                ModelState.AddModelError("", "Login inválido.");
             }
+
             return View(login);
         }
 
@@ -54,7 +55,5 @@ namespace ControleEstoque.Web.Controllers
             FormsAuthentication.SignOut();
             return RedirectToAction("Index", "Home");
         }
-
     }
-
 }

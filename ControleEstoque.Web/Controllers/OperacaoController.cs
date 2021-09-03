@@ -13,16 +13,19 @@ namespace ControleEstoque.Web.Controllers
         {
             return View();
         }
+
         [Authorize]
         public ActionResult SaidaEstoque()
         {
             return View();
         }
+
         [Authorize]
-        public ActionResult LancaPerdaProduto()
+        public ActionResult LancPerdaProduto()
         {
             return View();
         }
+
         [Authorize]
         public ActionResult Inventario()
         {

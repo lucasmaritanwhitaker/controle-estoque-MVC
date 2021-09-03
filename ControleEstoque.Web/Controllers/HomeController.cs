@@ -13,10 +13,10 @@ namespace ControleEstoque.Web.Controllers
         {
             return View();
         }
+
         [Authorize]
         public ActionResult Sobre()
         {
-
             return View();
         }
     }
