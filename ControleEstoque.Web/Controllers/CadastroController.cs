@@ -9,6 +9,7 @@ namespace ControleEstoque.Web.Controllers
 {
     public class CadastroController : Controller
     {
+        private const int quantLinhaPorPagina = 5;
         #region Usuários
 
         private const string _senhaPadrao = "{$127;$188}";
@@ -85,13 +86,36 @@ namespace ControleEstoque.Web.Controllers
         [Authorize]
         public ActionResult GrupoProduto()
         {
-            return View(GrupoProdutoModel.RecuperarLista());
+            ViewBag.QuantMaxLinhasPorPag = quantLinhaPorPagina;
+            ViewBag.PaginaAtual = 1;
+
+            var lista = GrupoProdutoModel.RecuperarLista(ViewBag.PaginaAtual, quantLinhaPorPagina);
+            var quant = GrupoProdutoModel.RecuperarQuantidade();
+
+            var difQuantiPaginas = (quant % ViewBag.QuantMaxLinhasPorPag) > 0 ? 1 : 0;
+            ViewBag.QuantidadePaginas = (quant / ViewBag.QuantMaxLinhasPorPag) + difQuantiPaginas;
+
+
+            return View(lista);
         }
 
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public ActionResult RecuperarGrupoProduto(int id)
+        public JsonResult GrupoProdutoPagina(int pagina)
+        {
+            var lista = GrupoProdutoModel.RecuperarLista(pagina, quantLinhaPorPagina);
+
+            
+
+
+            return Json(lista);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public JsonResult RecuperarGrupoProduto(int id)
         {
             return Json(GrupoProdutoModel.RecuperarPeloId(id));
         }
@@ -99,7 +123,7 @@ namespace ControleEstoque.Web.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public ActionResult ExcluirGrupoProduto(int id)
+        public JsonResult ExcluirGrupoProduto(int id)
         {
             return Json(GrupoProdutoModel.ExcluirPeloId(id));
         }
@@ -107,7 +131,7 @@ namespace ControleEstoque.Web.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public ActionResult SalvarGrupoProduto(GrupoProdutoModel model)
+        public JsonResult SalvarGrupoProduto(GrupoProdutoModel model)
         {
             var resultado = "OK";
             var mensagens = new List<string>();

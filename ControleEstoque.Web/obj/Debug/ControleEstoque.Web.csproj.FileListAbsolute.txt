@@ -1,3 +1,4 @@
+C:\Users\lucasmaritan\OneDrive\Área de Trabalho\Aulas\Z-SMN\controle-estoque-aula16\ControleEstoque.Web\obj\Debug\ControleEstoque.Web.csproj.CoreCompileInputs.cache
 C:\Users\lucasmaritan\OneDrive\Área de Trabalho\Aulas\Z-SMN\controle-estoque-aula16\ControleEstoque.Web\bin\ApplicationInsights.config
 C:\Users\lucasmaritan\OneDrive\Área de Trabalho\Aulas\Z-SMN\controle-estoque-aula16\ControleEstoque.Web\bin\roslyn\csc.exe
 C:\Users\lucasmaritan\OneDrive\Área de Trabalho\Aulas\Z-SMN\controle-estoque-aula16\ControleEstoque.Web\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
@@ -48,8 +49,7 @@ C:\Users\lucasmaritan\OneDrive\Área de Trabalho\Aulas\Z-SMN\controle-estoque-au
 C:\Users\lucasmaritan\OneDrive\Área de Trabalho\Aulas\Z-SMN\controle-estoque-aula16\ControleEstoque.Web\bin\System.Web.WebPages.Razor.xml
 C:\Users\lucasmaritan\OneDrive\Área de Trabalho\Aulas\Z-SMN\controle-estoque-aula16\ControleEstoque.Web\bin\Antlr3.Runtime.pdb
 C:\Users\lucasmaritan\OneDrive\Área de Trabalho\Aulas\Z-SMN\controle-estoque-aula16\ControleEstoque.Web\bin\Newtonsoft.Json.xml
-C:\Users\lucasmaritan\OneDrive\Área de Trabalho\Aulas\Z-SMN\controle-estoque-aula16\ControleEstoque.Web\obj\Debug\ControleEstoque.Web.csproj.AssemblyReference.cache
-C:\Users\lucasmaritan\OneDrive\Área de Trabalho\Aulas\Z-SMN\controle-estoque-aula16\ControleEstoque.Web\obj\Debug\ControleEstoque.Web.csproj.CoreCompileInputs.cache
 C:\Users\lucasmaritan\OneDrive\Área de Trabalho\Aulas\Z-SMN\controle-estoque-aula16\ControleEstoque.Web\obj\Debug\ControleEstoque.Web.csproj.CopyComplete
 C:\Users\lucasmaritan\OneDrive\Área de Trabalho\Aulas\Z-SMN\controle-estoque-aula16\ControleEstoque.Web\obj\Debug\ControleEstoque.Web.dll
 C:\Users\lucasmaritan\OneDrive\Área de Trabalho\Aulas\Z-SMN\controle-estoque-aula16\ControleEstoque.Web\obj\Debug\ControleEstoque.Web.pdb
+C:\Users\lucasmaritan\OneDrive\Área de Trabalho\Aulas\Z-SMN\controle-estoque-aula16\ControleEstoque.Web\obj\Debug\ControleEstoque.Web.csproj.AssemblyReference.cache
