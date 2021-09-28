@@ -1,17 +1,18 @@
-﻿@model List<ControleEstoque.Web.Models.GrupoProdutoModel>
+﻿@model List<ControleEstoque.Web.Models.UnidadeMedidaModel>
 @{
     Layout = "~/Views/Shared/_Cadastro.cshtml";
-    ViewBag.Title = "Grupo de Produtos";
+    ViewBag.Title = "Unidade de Medida";
     ViewBag.Lista = Model;
 }
 
 @section Styles {
     <link href="~/Content/bootstrap-select.css" rel="stylesheet" />
-    <link href="~/Content/Cadastro/GrupoProduto.css" rel="stylesheet" />
+    <link href="~/Content/Cadastro/UnidadeMedida.css" rel="stylesheet" />
 }
 
 @section TituloGrid {
     <th>Nome</th>
+    <th>Sigla</th>
     <th>Ativo</th>
     <th>Ação</th>
 }
@@ -28,6 +29,7 @@
 
                 <tr data-id="@item.Id">
                     <td>@item.Nome</td>
+                    <td>@item.Sigla</td>
                     <td>@ativo</td>
                     <td>
                         <a class="btn btn-primary btn-alterar" role="button"><i class="glyphicon glyphicon-pencil"></i> Alterar</a>
@@ -52,6 +54,12 @@
             </div>
         </div>
         <div class="form-group">
+            @Html.Label("txt_sigla", "Sigla", new { @class = "col-md-3 control-label" })
+            <div class="col-md-12">
+                @Html.TextBox("txt_sigla", null, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
             @Html.Label("cbx_ativo", "Ativo", new { @class = "col-md-3 control-label" })
             <div class="col-md-12">
                 @Html.CheckBox("cbx_ativo")
@@ -64,11 +72,11 @@
     <script src="~/Scripts/bootstrap-select.js"></script>
     <script>
         var tituloPagina = '@ViewBag.Title';
-        var url_excluir = '@Url.Action("ExcluirGrupoProduto", "CadGrupoProduto")';
-        var url_confirmar = '@Url.Action("SalvarGrupoProduto", "CadGrupoProduto")';
-        var url_page_click = '@Url.Action("GrupoProdutoPagina", "CadGrupoProduto")';
-        var url_tam_pag_change = '@Url.Action("GrupoProdutoPagina", "CadGrupoProduto")';
-        var url_alterar = '@Url.Action("RecuperarGrupoProduto", "CadGrupoProduto")';
+        var url_excluir = '@Url.Action("ExcluirUnidadeMedida", "CadUnidadeMedida")';
+        var url_confirmar = '@Url.Action("SalvarUnidadeMedida", "CadUnidadeMedida")';
+        var url_page_click = '@Url.Action("UnidadeMedidaPagina", "CadUnidadeMedida")';
+        var url_tam_pag_change = '@Url.Action("UnidadeMedidaPagina", "CadUnidadeMedida")';
+        var url_alterar = '@Url.Action("RecuperarUnidadeMedida", "CadUnidadeMedida")';
     </script>
-    <script src="~/Scripts/Cadastro/GrupoProduto.js"></script>
+    <script src="~/Scripts/Cadastro/UnidadeMedida.js"></script>
 }

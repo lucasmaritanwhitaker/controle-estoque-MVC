@@ -2,23 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace ControleEstoque.Web.Controllers
 {
-    [Authorize(Roles ="Gerente,Administrativo,Operador")]
-    public class CadGrupoProdutoController : Controller
+    [Authorize(Roles = "Gerente")]
+    public class CadUsuarioController : Controller
     {
         private const int _quantMaxLinhasPorPagina = 5;
+        private const string _senhaPadrao = "{$127;$188}";
 
         public ActionResult Index()
         {
+            ViewBag.SenhaPadrao = _senhaPadrao;
             ViewBag.ListaTamPag = new SelectList(new int[] { _quantMaxLinhasPorPagina, 10, 15, 20 }, _quantMaxLinhasPorPagina);
             ViewBag.QuantMaxLinhasPorPagina = _quantMaxLinhasPorPagina;
             ViewBag.PaginaAtual = 1;
 
-            var lista = GrupoProdutoModel.RecuperarLista(ViewBag.PaginaAtual, _quantMaxLinhasPorPagina);
+            var lista = UsuarioModel.RecuperarLista(ViewBag.PaginaAtual, _quantMaxLinhasPorPagina);
             var quant = GrupoProdutoModel.RecuperarQuantidade();
 
             var difQuantPaginas = (quant % ViewBag.QuantMaxLinhasPorPagina) > 0 ? 1 : 0;
@@ -29,31 +30,30 @@ namespace ControleEstoque.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult GrupoProdutoPagina(int pagina, int tamPag)
+        public JsonResult UsuarioPagina(int pagina, int tamPag)
         {
-            var lista = GrupoProdutoModel.RecuperarLista(pagina, tamPag);
+            var lista = UsuarioModel.RecuperarLista(pagina, tamPag);
 
             return Json(lista);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult RecuperarGrupoProduto(int id)
+        public ActionResult RecuperarUsuario(int id)
         {
-            return Json(GrupoProdutoModel.RecuperarPeloId(id));
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Gerente,Administrativo")]
-        [ValidateAntiForgeryToken]
-        public JsonResult ExcluirGrupoProduto(int id)
-        {
-            return Json(GrupoProdutoModel.ExcluirPeloId(id));
+            return Json(UsuarioModel.RecuperarPeloId(id));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult SalvarGrupoProduto(GrupoProdutoModel model)
+        public ActionResult ExcluirUsuario(int id)
+        {
+            return Json(UsuarioModel.ExcluirPeloId(id));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SalvarUsuario(UsuarioModel model)
         {
             var resultado = "OK";
             var mensagens = new List<string>();
@@ -68,6 +68,11 @@ namespace ControleEstoque.Web.Controllers
             {
                 try
                 {
+                    if (model.Senha == _senhaPadrao)
+                    {
+                        model.Senha = "";
+                    }
+
                     var id = model.Salvar();
                     if (id > 0)
                     {

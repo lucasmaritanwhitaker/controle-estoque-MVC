@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 
 namespace ControleEstoque.Web.Models
 {
-    public class GrupoProdutoModel
+    public class LocalArmazenamentoModel
     {
         public int Id { get; set; }
 
@@ -25,13 +21,12 @@ namespace ControleEstoque.Web.Models
 
             using (var conexao = new SqlConnection())
             {
-                
                 conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
                 conexao.Open();
                 using (var comando = new SqlCommand())
                 {
                     comando.Connection = conexao;
-                    comando.CommandText = "select count(*) from grupo_produto";
+                    comando.CommandText = "select count(*) from local_armazenamento";
                     ret = (int)comando.ExecuteScalar();
                 }
             }
@@ -39,9 +34,9 @@ namespace ControleEstoque.Web.Models
             return ret;
         }
 
-        public static List<GrupoProdutoModel> RecuperarLista(int pagina, int tamPagina)
+        public static List<LocalArmazenamentoModel> RecuperarLista(int pagina, int tamPagina)
         {
-            var ret = new List<GrupoProdutoModel>();
+            var ret = new List<LocalArmazenamentoModel>();
 
             using (var conexao = new SqlConnection())
             {
@@ -53,12 +48,12 @@ namespace ControleEstoque.Web.Models
 
                     comando.Connection = conexao;
                     comando.CommandText = string.Format(
-                        "select * from grupo_produto order by nome offset {0} rows fetch next {1} rows only",
+                        "select * from local_armazenamento order by nome offset {0} rows fetch next {1} rows only",
                         pos > 0 ? pos - 1 : 0, tamPagina);
                     var reader = comando.ExecuteReader();
                     while (reader.Read())
                     {
-                        ret.Add(new GrupoProdutoModel
+                        ret.Add(new LocalArmazenamentoModel
                         {
                             Id = (int)reader["id"],
                             Nome = (string)reader["nome"],
@@ -71,9 +66,9 @@ namespace ControleEstoque.Web.Models
             return ret;
         }
 
-        public static GrupoProdutoModel RecuperarPeloId(int id)
+        public static LocalArmazenamentoModel RecuperarPeloId(int id)
         {
-            GrupoProdutoModel ret = null;
+            LocalArmazenamentoModel ret = null;
 
             using (var conexao = new SqlConnection())
             {
@@ -82,14 +77,14 @@ namespace ControleEstoque.Web.Models
                 using (var comando = new SqlCommand())
                 {
                     comando.Connection = conexao;
-                    comando.CommandText = "select * from grupo_produto where (id = @id)";
+                    comando.CommandText = "select * from local_armazenamento where (id = @id)";
 
                     comando.Parameters.Add("@id", SqlDbType.Int).Value = id;
 
                     var reader = comando.ExecuteReader();
                     if (reader.Read())
                     {
-                        ret = new GrupoProdutoModel
+                        ret = new LocalArmazenamentoModel
                         {
                             Id = (int)reader["id"],
                             Nome = (string)reader["nome"],
@@ -115,7 +110,7 @@ namespace ControleEstoque.Web.Models
                     using (var comando = new SqlCommand())
                     {
                         comando.Connection = conexao;
-                        comando.CommandText = "delete from grupo_produto where (id = @id)";
+                        comando.CommandText = "delete from local_armazenamento where (id = @id)";
 
                         comando.Parameters.Add("@id", SqlDbType.Int).Value = id;
 
@@ -143,7 +138,7 @@ namespace ControleEstoque.Web.Models
 
                     if (model == null)
                     {
-                        comando.CommandText = "insert into grupo_produto (nome, ativo) values (@nome, @ativo); select convert(int, scope_identity())";
+                        comando.CommandText = "insert into local_armazenamento (nome, ativo) values (@nome, @ativo); select convert(int, scope_identity())";
 
                         comando.Parameters.Add("@nome", SqlDbType.VarChar).Value = this.Nome;
                         comando.Parameters.Add("@ativo", SqlDbType.VarChar).Value = (this.Ativo ? 1 : 0);
@@ -152,7 +147,7 @@ namespace ControleEstoque.Web.Models
                     }
                     else
                     {
-                        comando.CommandText = "update grupo_produto set nome=@nome, ativo=@ativo where id = @id";
+                        comando.CommandText = "update local_armazenamento set nome=@nome, ativo=@ativo where id = @id";
 
                         comando.Parameters.Add("@nome", SqlDbType.VarChar).Value = this.Nome;
                         comando.Parameters.Add("@ativo", SqlDbType.VarChar).Value = (this.Ativo ? 1 : 0);
