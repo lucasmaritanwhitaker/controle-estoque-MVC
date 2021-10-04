@@ -1,11 +1,13 @@
 CREATE DATABASE [controle-estoque]
 GO
 USE [controle-estoque]
+
 GO
 CREATE USER [admin] FOR LOGIN [admin] WITH DEFAULT_SCHEMA=[dbo]
 GO
 ALTER ROLE [db_owner] ADD MEMBER [admin]
 GO
+
 CREATE TABLE [dbo].[grupo_produto] (
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[nome] [nvarchar](50) NULL,
@@ -59,6 +61,7 @@ CREATE TABLE [dbo].[local_armazenamento] (
 	CONSTRAINT [PK_local_armazenamento] PRIMARY KEY ([id])
 )
 GO
+
 CREATE TABLE [dbo].[pais] (
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[nome] [varchar](30) NOT NULL,
@@ -147,3 +150,4 @@ ALTER TABLE [dbo].[produto] WITH CHECK ADD FOREIGN KEY([id_marca]) REFERENCES [d
 GO
 ALTER TABLE [dbo].[produto] WITH CHECK ADD FOREIGN KEY([id_unidade_medida]) REFERENCES [dbo].[unidade_medida] ([id])
 GO
+
