@@ -148,11 +148,11 @@ GO
 ALTER TABLE [dbo].[produto] WITH CHECK ADD FOREIGN KEY([id_unidade_medida]) REFERENCES [dbo].[unidade_medida] ([id])
 GO
 
---insert into [perfil]
---	values ('Rafael', 1)
+insert into [perfil]
+	values ('Gerente', 1)
 
---insert into usuario
---	values ('Rafael', '698dc19d489c4e4db73e28a713eab07b', 'Rafael', 'rafael.henriquemorais@gmail.com', 1)
+insert into usuario
+	values ('Rafael', '698dc19d489c4e4db73e28a713eab07b', 'Rafael', 'rafael.henriquemorais@gmail.com', 1)
 
 insert into [perfil_usuario]
-	values (1, 2)
+	values (1, 1)
