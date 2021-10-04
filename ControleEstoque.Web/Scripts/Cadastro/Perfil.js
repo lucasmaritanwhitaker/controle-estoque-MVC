@@ -21,11 +21,6 @@ function set_focus_form() {
     $('#txt_nome').focus();
 }
 
-function set_dados_grid(dados) {
-    return '<td>' + dados.Nome + '</td>' +
-           '<td>' + (dados.Ativo ? 'SIM' : 'NÃO') + '</td>';
-}
-
 function get_dados_inclusao() {
     return {
         Id: 0,
@@ -38,7 +33,8 @@ function get_dados_form() {
     return {
         Id: $('#id_cadastro').val(),
         Nome: $('#txt_nome').val(),
-        Ativo: $('#cbx_ativo').prop('checked')
+        Ativo: $('#cbx_ativo').prop('checked'),
+        idUsuarios: get_lista_usuarios_marcados()
     };
 }
 
@@ -46,4 +42,20 @@ function preencher_linha_grid(param, linha) {
     linha
         .eq(0).html(param.Nome).end()
         .eq(1).html(param.Ativo ? 'SIM' : 'NÃO');
+}
+
+function get_lista_usuarios_marcados() {
+    var ids = [],
+        lista_usuario = $('#lista_usuario');
+
+    lista_usuario.find('input[type=checkbox]').each(function (index, input) {
+        var cbx = $(input),
+            marcado = cbx.is(':checked');
+
+        if (marcado) {
+            ids.push(parseInt(cbx.attr('data-id-usuario')));
+        }
+    });
+
+    return ids;
 }

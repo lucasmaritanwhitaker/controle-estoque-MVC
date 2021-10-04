@@ -17,8 +17,17 @@
     <section id="cadastro_conteudo">
         <div id="cabecalho_grid" class="row">
             <div class="col-md-12">
-                <a id="btn_incluir" class="btn btn-success" role="button"><i class="glyphicon glyphicon-plus"></i> Incluir</a>
-                @Html.DropDownList("ddl_tam_pag", (SelectList)ViewBag.ListaTamPag, new { @class = "selectpicker" })
+                <div class="row">
+                    <div class="col-md-2">
+                        <a id="btn_incluir" class="btn btn-success" role="button"><i class="glyphicon glyphicon-plus"></i> Incluir</a>
+                    </div>
+                    <div class="col-md-4">
+                        @Html.DropDownList("ddl_tam_pag", (SelectList)ViewBag.ListaTamPag, new { @class = "selectpicker" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TextBox("txt_filtro", null, new { @class = "form-control" })
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -30,7 +39,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @RenderSection("LinhaGrid", true)
                     </tbody>
                 </table>
                 <div id="mensagem_grid" @Html.Raw(lista != null && lista.Count > 0 ? "class=\"invisivel\"" : "")>
@@ -40,24 +48,24 @@
         </div>
         @if (ViewBag.QuantPaginas > 1)
         {
-            <div class="row">
-                <div class="col-md-12">
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            @for (int i = 2; i <= ViewBag.QuantPaginas; i++)
+        <div class="row">
+            <div class="col-md-12">
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        @for (int i = 2; i <= ViewBag.QuantPaginas; i++)
                             {
-                                <li class="page-item"><a class="page-link" href="#">@i</a></li>
+                            <li class="page-item"><a class="page-link" href="#">@i</a></li>
                             }
-                        </ul>
-                    </nav>
-                </div>
+                    </ul>
+                </nav>
             </div>
+        </div>
         }
     </section>
 </div>
 @Html.Hidden("id_cadastro")
-<div id="modal_cadastro" class="form-horizontal invisivel" role="dialog">
+<div id="modal_cadastro" class="invisivel" role="dialog">
     <div id="msg_mensagem_aviso" class="text-danger invisivel"></div>
     <fieldset>
         @Html.AntiForgeryToken()
@@ -77,6 +85,7 @@
     </fieldset>
 </div>
 @section Scripts{
+    <script src="~/Scripts/mustache.min.js"></script>
     <script src="~/Scripts/Cadastro/CadBase.js"></script>
     @RenderSection("Scripts", true)
 }
