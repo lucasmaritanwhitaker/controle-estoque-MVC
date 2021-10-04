@@ -25,8 +25,7 @@ namespace ControleEstoque.Web.Models
 
             using (var conexao = new SqlConnection())
             {
-                
-                conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
+                conexao.ConnectionString = ConfigurationManager.ConnectionStrings["principal"].ConnectionString;
                 conexao.Open();
                 using (var comando = new SqlCommand())
                 {
@@ -39,21 +38,31 @@ namespace ControleEstoque.Web.Models
             return ret;
         }
 
-        public static List<GrupoProdutoModel> RecuperarLista(int pagina, int tamPagina)
+        public static List<GrupoProdutoModel> RecuperarLista(int pagina, int tamPagina, string filtro = "")
         {
             var ret = new List<GrupoProdutoModel>();
 
             using (var conexao = new SqlConnection())
             {
-                conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
+                conexao.ConnectionString = ConfigurationManager.ConnectionStrings["principal"].ConnectionString;
                 conexao.Open();
                 using (var comando = new SqlCommand())
                 {
                     var pos = (pagina - 1) * tamPagina;
 
+                    var filtroWhere = "";
+                    if (!string.IsNullOrEmpty(filtro))
+                    {
+                        filtroWhere = string.Format(" where lower(nome) like '%{0}%'", filtro.ToLower());
+                    }
+
                     comando.Connection = conexao;
                     comando.CommandText = string.Format(
-                        "select * from grupo_produto order by nome offset {0} rows fetch next {1} rows only",
+                        "select *" +
+                        " from grupo_produto" +
+                        filtroWhere +
+                        " order by nome" +
+                        " offset {0} rows fetch next {1} rows only",
                         pos > 0 ? pos - 1 : 0, tamPagina);
                     var reader = comando.ExecuteReader();
                     while (reader.Read())
@@ -77,7 +86,7 @@ namespace ControleEstoque.Web.Models
 
             using (var conexao = new SqlConnection())
             {
-                conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
+                conexao.ConnectionString = ConfigurationManager.ConnectionStrings["principal"].ConnectionString;
                 conexao.Open();
                 using (var comando = new SqlCommand())
                 {
@@ -110,7 +119,7 @@ namespace ControleEstoque.Web.Models
             {
                 using (var conexao = new SqlConnection())
                 {
-                    conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
+                    conexao.ConnectionString = ConfigurationManager.ConnectionStrings["principal"].ConnectionString;
                     conexao.Open();
                     using (var comando = new SqlCommand())
                     {
@@ -135,7 +144,7 @@ namespace ControleEstoque.Web.Models
 
             using (var conexao = new SqlConnection())
             {
-                conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
+                conexao.ConnectionString = ConfigurationManager.ConnectionStrings["principal"].ConnectionString;
                 conexao.Open();
                 using (var comando = new SqlCommand())
                 {

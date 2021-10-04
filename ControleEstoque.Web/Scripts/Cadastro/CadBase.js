@@ -4,13 +4,14 @@
 }
 
 function formatar_mensagem_aviso(mensagens) {
-    var ret = '';
+    var template =
+        '<ul>' +
+        '{{ #. }}' +
+        '<li>{{ . }}</li>' +
+        '{{ /. }}' +
+        '</ul>';
 
-    for (var i = 0; i < mensagens.length; i++) {
-        ret += '<li>' + mensagens[i] + '</li>';
-    }
-
-    return '<ul>' + ret + '</ul>';
+    return Mustache.render(template, mensagens);
 }
 
 function abrir_form(dados) {
@@ -25,7 +26,8 @@ function abrir_form(dados) {
 
     bootbox.dialog({
         title: 'Cadastro de ' + tituloPagina,
-        message: modal_cadastro
+        message: modal_cadastro,
+        className: 'dialogo',
     })
     .on('shown.bs.modal', function () {
         modal_cadastro.show(0, function () {
@@ -38,16 +40,8 @@ function abrir_form(dados) {
 }
 
 function criar_linha_grid(dados) {
-    var ret =
-        '<tr data-id=' + dados.Id + '>' +
-        set_dados_grid(dados) +
-        '<td>' +
-        '<a class="btn btn-primary btn-alterar" role="button" style="margin-right: 3px"><i class="glyphicon glyphicon-pencil"></i> Alterar</a>' +
-        '<a class="btn btn-danger btn-excluir" role="button"><i class="glyphicon glyphicon-trash"></i> Excluir</a>' +
-        '</td>' +
-        '</tr>';
-
-    return ret;
+    var template = $('#template-grid').html();
+    return Mustache.render(template, dados);
 }
 
 $(document).on('click', '#btn_incluir', function () {
@@ -63,6 +57,9 @@ $(document).on('click', '#btn_incluir', function () {
         if (response) {
             abrir_form(response);
         }
+    })
+    .fail(function () {
+        swal('Aviso', 'Não foi possível recuperar as informações. Tente novamente em instantes.', 'warning');
     });
 })
 .on('click', '.btn-excluir', function () {
@@ -95,6 +92,9 @@ $(document).on('click', '#btn_incluir', function () {
                             $('#mensagem_grid').removeClass('invisivel');
                         }
                     }
+                })
+                .fail(function () {
+                    swal('Aviso', 'Não foi possível excluir. Tente novamente em instantes.', 'warning');
                 });
             }
         }
@@ -134,47 +134,117 @@ $(document).on('click', '#btn_incluir', function () {
             $('#msg_mensagem_aviso').show();
             $('#msg_erro').hide();
         }
+    })
+    .fail(function () {
+        swal('Aviso', 'Não foi possível salvar. Tente novamente em instantes.', 'warning');
     });
 })
 .on('click', '.page-item', function () {
     var btn = $(this),
+        filtro = $('#txt_filtro'),
         tamPag = $('#ddl_tam_pag').val(),
         pagina = btn.text(),
         url = url_page_click,
-        param = { 'pagina': pagina, 'tamPag': tamPag };
+        param = { 'pagina': pagina, 'tamPag': tamPag, 'filtro': filtro.val() };
 
     $.post(url, add_anti_forgery_token(param), function (response) {
         if (response) {
             var table = $('#grid_cadastro').find('tbody');
 
             table.empty();
-            for (var i = 0; i < response.length; i++) {
-                table.append(criar_linha_grid(response[i]));
+            if (response.length > 0) {
+                $('#grid_cadastro').removeClass('invisivel');
+                $('#mensagem_grid').addClass('invisivel');
+
+                for (var i = 0; i < response.length; i++) {
+                    table.append(criar_linha_grid(response[i]));
+                }
+            }
+            else {
+                $('#grid_cadastro').addClass('invisivel');
+                $('#mensagem_grid').removeClass('invisivel');
             }
 
             btn.siblings().removeClass('active');
             btn.addClass('active');
         }
+    })
+    .fail(function () {
+        swal('Aviso', 'Não foi possível recuperar as informações. Tente novamente em instantes.', 'warning');
     });
 })
 .on('change', '#ddl_tam_pag', function () {
     var ddl = $(this),
+        filtro = $('#txt_filtro'),
         tamPag = ddl.val(),
         pagina = 1,
         url = url_tam_pag_change,
-        param = { 'pagina': pagina, 'tamPag': tamPag };
+        param = { 'pagina': pagina, 'tamPag': tamPag, 'filtro': filtro.val() };
 
     $.post(url, add_anti_forgery_token(param), function (response) {
         if (response) {
             var table = $('#grid_cadastro').find('tbody');
 
             table.empty();
-            for (var i = 0; i < response.length; i++) {
-                table.append(criar_linha_grid(response[i]));
+            if (response.length > 0) {
+                $('#grid_cadastro').removeClass('invisivel');
+                $('#mensagem_grid').addClass('invisivel');
+
+                for (var i = 0; i < response.length; i++) {
+                    table.append(criar_linha_grid(response[i]));
+                }
+            }
+            else {
+                $('#grid_cadastro').addClass('invisivel');
+                $('#mensagem_grid').removeClass('invisivel');
             }
 
             ddl.siblings().removeClass('active');
             ddl.addClass('active');
         }
+    })
+    .fail(function () {
+        swal('Aviso', 'Não foi possível recuperar as informações. Tente novamente em instantes.', 'warning');
     });
+})
+.on('keyup', '#txt_filtro', function () {
+    var filtro = $(this),
+        ddl = $('#ddl_tam_pag'),
+        tamPag = ddl.val(),
+        pagina = 1,
+        url = url_filtro_change,
+        param = { 'pagina': pagina, 'tamPag': tamPag, 'filtro': filtro.val() };
+
+    $.post(url, add_anti_forgery_token(param), function (response) {
+        if (response) {
+            var table = $('#grid_cadastro').find('tbody');
+
+            table.empty();
+            if (response.length > 0) {
+                $('#grid_cadastro').removeClass('invisivel');
+                $('#mensagem_grid').addClass('invisivel');
+
+                for (var i = 0; i < response.length; i++) {
+                    table.append(criar_linha_grid(response[i]));
+                }
+            }
+            else {
+                $('#grid_cadastro').addClass('invisivel');
+                $('#mensagem_grid').removeClass('invisivel');
+            }
+
+            ddl.siblings().removeClass('active');
+            ddl.addClass('active');
+        }
+    })
+    .fail(function () {
+        swal('Aviso', 'Não foi possível recuperar as informações. Tente novamente em instantes.', 'warning');
+    });
+});
+
+$(document).ready(function () {
+    var grid = $('#grid_cadastro > tbody');
+    for (var i = 0; i < linhas.length; i++) {
+        grid.append(criar_linha_grid(linhas[i]));
+    }
 });

@@ -21,7 +21,7 @@ namespace ControleEstoque.Web.Models
 
             using (var conexao = new SqlConnection())
             {
-                conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
+                conexao.ConnectionString = ConfigurationManager.ConnectionStrings["principal"].ConnectionString;
                 conexao.Open();
                 using (var comando = new SqlCommand())
                 {
@@ -40,7 +40,7 @@ namespace ControleEstoque.Web.Models
 
             using (var conexao = new SqlConnection())
             {
-                conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
+                conexao.ConnectionString = ConfigurationManager.ConnectionStrings["principal"].ConnectionString;
                 conexao.Open();
                 using (var comando = new SqlCommand())
                 {
@@ -72,7 +72,7 @@ namespace ControleEstoque.Web.Models
 
             using (var conexao = new SqlConnection())
             {
-                conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
+                conexao.ConnectionString = ConfigurationManager.ConnectionStrings["principal"].ConnectionString;
                 conexao.Open();
                 using (var comando = new SqlCommand())
                 {
@@ -105,7 +105,7 @@ namespace ControleEstoque.Web.Models
             {
                 using (var conexao = new SqlConnection())
                 {
-                    conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
+                    conexao.ConnectionString = ConfigurationManager.ConnectionStrings["principal"].ConnectionString;
                     conexao.Open();
                     using (var comando = new SqlCommand())
                     {
@@ -130,7 +130,7 @@ namespace ControleEstoque.Web.Models
 
             using (var conexao = new SqlConnection())
             {
-                conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
+                conexao.ConnectionString = ConfigurationManager.ConnectionStrings["principal"].ConnectionString;
                 conexao.Open();
                 using (var comando = new SqlCommand())
                 {
