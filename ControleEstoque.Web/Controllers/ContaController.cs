@@ -1,5 +1,8 @@
 ﻿using ControleEstoque.Web.Models;
 using System;
+using System.Configuration;
+using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;

@@ -1,6 +1,6 @@
-﻿using ControleEstoque.Web.Helpers;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
