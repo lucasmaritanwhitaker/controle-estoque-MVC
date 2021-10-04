@@ -1,11 +1,8 @@
-﻿using System;
+﻿using ControleEstoque.Web.Helpers;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 
 namespace ControleEstoque.Web.Models
 {
@@ -26,7 +23,7 @@ namespace ControleEstoque.Web.Models
 
             using (var conexao = new SqlConnection())
             {
-                conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
+                conexao.ConnectionString = ConnectionHelper.ConnectionString;
                 conexao.Open();
                 using (var comando = new SqlCommand())
                 {
@@ -59,7 +56,7 @@ namespace ControleEstoque.Web.Models
 
             using (var conexao = new SqlConnection())
             {
-                conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
+                conexao.ConnectionString = ConnectionHelper.ConnectionString;
                 conexao.Open();
                 using (var comando = new SqlCommand())
                 {
@@ -78,7 +75,7 @@ namespace ControleEstoque.Web.Models
 
             using (var conexao = new SqlConnection())
             {
-                conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
+                conexao.ConnectionString = ConnectionHelper.ConnectionString;
                 conexao.Open();
                 using (var comando = new SqlCommand())
                 {
@@ -119,7 +116,7 @@ namespace ControleEstoque.Web.Models
 
             using (var conexao = new SqlConnection())
             {
-                conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
+                conexao.ConnectionString = ConnectionHelper.ConnectionString;
                 conexao.Open();
                 using (var comando = new SqlCommand())
                 {
@@ -152,7 +149,7 @@ namespace ControleEstoque.Web.Models
             {
                 using (var conexao = new SqlConnection())
                 {
-                    conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
+                    conexao.ConnectionString = ConnectionHelper.ConnectionString;
                     conexao.Open();
                     using (var comando = new SqlCommand())
                     {
@@ -177,7 +174,7 @@ namespace ControleEstoque.Web.Models
 
             using (var conexao = new SqlConnection())
             {
-                conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
+                conexao.ConnectionString = ConnectionHelper.ConnectionString;
                 conexao.Open();
                 using (var comando = new SqlCommand())
                 {
@@ -227,7 +224,7 @@ namespace ControleEstoque.Web.Models
 
             using (var conexao = new SqlConnection())
             {
-                conexao.ConnectionString = @"Data Source=DESKTOP-SDT4Q2C\SQLEXPRESS;Initial Catalog=controle-estoque;User Id=admin;Password=123";
+                conexao.ConnectionString = ConnectionHelper.ConnectionString;
                 conexao.Open();
                 using (var comando = new SqlCommand())
                 {

@@ -3,11 +3,13 @@ GO
 CREATE DATABASE [controle-estoque]
 GO
 USE [controle-estoque]
+
 GO
 CREATE USER [admin] FOR LOGIN [admin] WITH DEFAULT_SCHEMA=[dbo]
 GO
 ALTER ROLE [db_owner] ADD MEMBER [admin]
 GO
+
 CREATE TABLE [dbo].[grupo_produto] (
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[nome] [nvarchar](50) NULL,
@@ -61,3 +63,14 @@ CREATE TABLE [dbo].[local_armazenamento] (
 	CONSTRAINT [PK_local_armazenamento] PRIMARY KEY ([id])
 )
 GO
+
+
+insert into [perfil]
+	values ('Rafael', 1)
+
+insert into usuario
+	values ('Rafael', 'teste', 'Rafael', 1)
+
+update usuario
+	set senha = '698dc19d489c4e4db73e28a713eab07b'
+	where id = 1
