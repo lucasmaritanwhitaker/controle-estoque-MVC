@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Configuration;
 using System.Data;
@@ -44,6 +45,8 @@ namespace ControleEstoque.Web.Models
 
         public bool Ativo { get; set; }
 
+        public string Imagem { get; set; }
+
         public static int RecuperarQuantidade()
         {
             var ret = 0;
@@ -63,7 +66,27 @@ namespace ControleEstoque.Web.Models
             return ret;
         }
 
-        public static List<ProdutoModel> RecuperarLista(int pagina = 0, int tamPagina = 0, string filtro = "")
+        private static ProdutoModel MontarProduto(SqlDataReader reader)
+        {
+            return new ProdutoModel
+            {
+                Id = (int)reader["id"],
+                Codigo = (string)reader["codigo"],
+                Nome = (string)reader["nome"],
+                PrecoCusto = (decimal)reader["preco_custo"],
+                PrecoVenda = (decimal)reader["preco_venda"],
+                QuantEstoque = (int)reader["quant_estoque"],
+                IdUnidadeMedida = (int)reader["id_unidade_medida"],
+                IdGrupo = (int)reader["id_grupo"],
+                IdMarca = (int)reader["id_marca"],
+                IdFornecedor = (int)reader["id_fornecedor"],
+                IdLocalArmazenamento = (int)reader["id_local_armazenamento"],
+                Ativo = (bool)reader["ativo"],
+                Imagem = (string)reader["imagem"],
+            };
+        }
+
+        public static List<ProdutoModel> RecuperarLista(int pagina = 0, int tamPagina = 0, string filtro = "", string ordem = "", bool somenteAtivos = false)
         {
             var ret = new List<ProdutoModel>();
 
@@ -81,6 +104,11 @@ namespace ControleEstoque.Web.Models
                         filtroWhere = string.Format(" where (lower(nome) like '%{0}%')", filtro.ToLower());
                     }
 
+                    if (somenteAtivos)
+                    {
+                        filtroWhere = (string.IsNullOrEmpty(filtroWhere) ? " where" : " and") + "(ativo = 1)";
+                    }
+
                     var paginacao = "";
                     if (pagina > 0 && tamPagina > 0)
                     {
@@ -93,27 +121,13 @@ namespace ControleEstoque.Web.Models
                         "select *" +
                         " from produto" +
                         filtroWhere +
-                        " order by nome" +
+                        " order by " + (!string.IsNullOrEmpty(ordem) ? ordem : "nome") +
                         paginacao;
 
                     var reader = comando.ExecuteReader();
                     while (reader.Read())
                     {
-                        ret.Add(new ProdutoModel
-                        {
-                            Id = (int)reader["id"],
-                            Codigo = (string)reader["codigo"],
-                            Nome = (string)reader["nome"],
-                            PrecoCusto = (decimal)reader["preco_custo"],
-                            PrecoVenda = (decimal)reader["preco_venda"],
-                            QuantEstoque = (int)reader["quant_estoque"],
-                            IdUnidadeMedida = (int)reader["id_unidade_medida"],
-                            IdGrupo = (int)reader["id_grupo"],
-                            IdMarca = (int)reader["id_marca"],
-                            IdFornecedor = (int)reader["id_fornecedor"],
-                            IdLocalArmazenamento = (int)reader["id_local_armazenamento"],
-                            Ativo = (bool)reader["ativo"]
-                        });
+                        ret.Add(MontarProduto(reader));
                     }
                 }
             }
@@ -139,21 +153,7 @@ namespace ControleEstoque.Web.Models
                     var reader = comando.ExecuteReader();
                     if (reader.Read())
                     {
-                        ret = new ProdutoModel
-                        {
-                            Id = (int)reader["id"],
-                            Codigo = (string)reader["codigo"],
-                            Nome = (string)reader["nome"],
-                            PrecoCusto = (decimal)reader["preco_custo"],
-                            PrecoVenda = (decimal)reader["preco_venda"],
-                            QuantEstoque = (int)reader["quant_estoque"],
-                            IdUnidadeMedida = (int)reader["id_unidade_medida"],
-                            IdGrupo = (int)reader["id_grupo"],
-                            IdMarca = (int)reader["id_marca"],
-                            IdFornecedor = (int)reader["id_fornecedor"],
-                            IdLocalArmazenamento = (int)reader["id_local_armazenamento"],
-                            Ativo = (bool)reader["ativo"]
-                        };
+                        ret = MontarProduto(reader);
                     }
                 }
             }
@@ -205,9 +205,9 @@ namespace ControleEstoque.Web.Models
                         comando.CommandText =
                             "insert into produto " +
                             "(codigo, nome, preco_custo, preco_venda, quant_estoque, id_unidade_medida, id_grupo, id_marca, " +
-                            "id_fornecedor, id_local_armazenamento, ativo) values " +
+                            "id_fornecedor, id_local_armazenamento, ativo, imagem) values " +
                             "(@codigo, @nome, @preco_custo, @preco_venda, @quant_estoque, @id_unidade_medida, @id_grupo, @id_marca, " +
-                            "@id_fornecedor, @id_local_armazenamento, @ativo); select convert(int, scope_identity())";
+                            "@id_fornecedor, @id_local_armazenamento, @ativo, @imagem); select convert(int, scope_identity())";
 
                         comando.Parameters.Add("@codigo", SqlDbType.VarChar).Value = this.Codigo;
                         comando.Parameters.Add("@nome", SqlDbType.VarChar).Value = this.Nome;
@@ -220,6 +220,7 @@ namespace ControleEstoque.Web.Models
                         comando.Parameters.Add("@id_fornecedor", SqlDbType.Int).Value = this.IdFornecedor;
                         comando.Parameters.Add("@id_local_armazenamento", SqlDbType.Int).Value = this.IdLocalArmazenamento;
                         comando.Parameters.Add("@ativo", SqlDbType.VarChar).Value = (this.Ativo ? 1 : 0);
+                        comando.Parameters.Add("@imagem", SqlDbType.VarChar).Value = this.Imagem;
 
                         ret = (int)comando.ExecuteScalar();
                     }
@@ -229,7 +230,7 @@ namespace ControleEstoque.Web.Models
                             "update produto set codigo=@codigo, nome=@nome, preco_custo=@preco_custo, " +
                             "preco_venda=@preco_venda, quant_estoque=@quant_estoque, id_unidade_medida=@id_unidade_medida, " +
                             "id_grupo=@id_grupo, id_marca=@id_marca, id_fornecedor=@id_fornecedor, " +
-                            "id_local_armazenamento=@id_local_armazenamento, ativo=@ativo where id = @id";
+                            "id_local_armazenamento=@id_local_armazenamento, ativo=@ativo, imagem=@imagem where id = @id";
 
                         comando.Parameters.Add("@id", SqlDbType.Int).Value = this.Id;
                         comando.Parameters.Add("@codigo", SqlDbType.VarChar).Value = this.Codigo;
@@ -243,6 +244,7 @@ namespace ControleEstoque.Web.Models
                         comando.Parameters.Add("@id_fornecedor", SqlDbType.Int).Value = this.IdFornecedor;
                         comando.Parameters.Add("@id_local_armazenamento", SqlDbType.Int).Value = this.IdLocalArmazenamento;
                         comando.Parameters.Add("@ativo", SqlDbType.VarChar).Value = (this.Ativo ? 1 : 0);
+                        comando.Parameters.Add("@imagem", SqlDbType.VarChar).Value = this.Imagem;
 
                         if (comando.ExecuteNonQuery() > 0)
                         {
@@ -250,6 +252,80 @@ namespace ControleEstoque.Web.Models
                         }
                     }
                 }
+            }
+
+            return ret;
+        }
+
+        public static string SalvarPedidoEntrada(DateTime data, Dictionary<int, int> produtos)
+        {
+            return SalvarPedido(data, produtos, "entrada_produto", true);
+        }
+
+        public static string SalvarPedidoSaida(DateTime data, Dictionary<int, int> produtos)
+        {
+            return SalvarPedido(data, produtos, "saida_produto", false);
+        }
+
+        public static string SalvarPedido(DateTime data, Dictionary<int, int> produtos, string nomeTabela, bool entrada)
+        {
+            var ret = "";
+
+            try
+            {
+                using (var conexao = new SqlConnection())
+                {
+                    conexao.ConnectionString = ConfigurationManager.ConnectionStrings["principal"].ConnectionString;
+                    conexao.Open();
+
+                    var numPedido = "";
+                    using (var comando = new SqlCommand())
+                    {
+                        comando.Connection = conexao;
+                        comando.CommandText = $"select next value for sec_{nomeTabela}";
+                        numPedido = ((int)comando.ExecuteScalar()).ToString("D10");
+                    }
+
+                    using (var transacao = conexao.BeginTransaction())
+                    {
+                        foreach (var produto in produtos)
+                        {
+                            using (var comando = new SqlCommand())
+                            {
+                                comando.Connection = conexao;
+                                comando.Transaction = transacao;
+                                comando.CommandText = $"insert into {nomeTabela} (numero, data, id_produto, quant) values (@numero, @data, @id_produto, @quant)";
+
+                                comando.Parameters.Add("@numero", SqlDbType.VarChar).Value = numPedido;
+                                comando.Parameters.Add("@data", SqlDbType.Date).Value = data;
+                                comando.Parameters.Add("@id_produto", SqlDbType.Int).Value = produto.Key;
+                                comando.Parameters.Add("@quant", SqlDbType.Int).Value = produto.Value;
+
+                                comando.ExecuteNonQuery();
+                            }
+
+                            using (var comando = new SqlCommand())
+                            {
+                                var sinal = (entrada ? "+" : "-");
+                                comando.Connection = conexao;
+                                comando.Transaction = transacao;
+                                comando.CommandText = $"update produto set quant_estoque = quant_estoque {sinal} @quant_estoque where (id = @id)";
+
+                                comando.Parameters.Add("@id", SqlDbType.Int).Value = produto.Key;
+                                comando.Parameters.Add("@quant_estoque", SqlDbType.Int).Value = produto.Value;
+
+                                comando.ExecuteNonQuery();
+                            }
+                        }
+
+                        transacao.Commit();
+
+                        ret = numPedido;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
             }
 
             return ret;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -71,7 +72,7 @@ namespace ControleEstoque.Web.Models
             return ret;
         }
 
-        public static List<UsuarioModel> RecuperarLista(int pagina = -1, int tamPagina = -1)
+        public static List<UsuarioModel> RecuperarLista(int pagina = -1, int tamPagina = -1, string ordem = "")
         {
             var ret = new List<UsuarioModel>();
 
@@ -87,12 +88,18 @@ namespace ControleEstoque.Web.Models
 
                     if (pagina == -1 || tamPagina == -1)
                     {
-                        comando.CommandText = "select * from usuario order by nome";
+                        comando.CommandText =
+                            "select *" +
+                            "from usuario" +
+                            " order by " + (!string.IsNullOrEmpty(ordem) ? ordem : "nome");
                     }
                     else
                     {
                         comando.CommandText = string.Format(
-                            "select * from usuario order by nome offset {0} rows fetch next {1} rows only",
+                            "select *" +
+                            " from usuario" +
+                            " order by " + (!string.IsNullOrEmpty(ordem) ? ordem : "nome") +
+                            " offset {0} rows fetch next {1} rows only",
                             pos > 0 ? pos - 1 : 0, tamPagina);
                     }
 
@@ -176,7 +183,7 @@ namespace ControleEstoque.Web.Models
 
             return ret;
         }
-        
+
         public static bool ExcluirPeloId(int id)
         {
             var ret = false;

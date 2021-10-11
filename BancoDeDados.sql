@@ -1,13 +1,13 @@
+USE [master]
+GO
 CREATE DATABASE [controle-estoque]
 GO
 USE [controle-estoque]
-
 GO
 CREATE USER [admin] FOR LOGIN [admin] WITH DEFAULT_SCHEMA=[dbo]
 GO
 ALTER ROLE [db_owner] ADD MEMBER [admin]
 GO
-
 CREATE TABLE [dbo].[grupo_produto] (
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[nome] [nvarchar](50) NULL,
@@ -61,7 +61,6 @@ CREATE TABLE [dbo].[local_armazenamento] (
 	CONSTRAINT [PK_local_armazenamento] PRIMARY KEY ([id])
 )
 GO
-
 CREATE TABLE [dbo].[pais] (
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[nome] [varchar](30) NOT NULL,
@@ -119,7 +118,26 @@ CREATE TABLE [dbo].[produto] (
 	[id_fornecedor] [int] NOT NULL,
 	[id_local_armazenamento] [int] NOT NULL,
 	[ativo] [bit] NOT NULL,
+	[imagem] [varchar](100) NOT NULL,
  CONSTRAINT [PK_produto] PRIMARY KEY ([id])
+)
+GO
+CREATE TABLE [dbo].[entrada_produto] (
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[numero] [varchar](10) NOT NULL,
+	[data] [datetime] NOT NULL,
+	[id_produto] [int] NOT NULL,
+	[quant] [int] NOT NULL,
+ CONSTRAINT [PK_entrada_produto] PRIMARY KEY ([id])
+)
+GO
+CREATE TABLE [dbo].[saida_produto] (
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[numero] [varchar](10) NOT NULL,
+	[data] [datetime] NOT NULL,
+	[id_produto] [int] NOT NULL,
+	[quant] [int] NOT NULL,
+ CONSTRAINT [PK_saida_produto] PRIMARY KEY ([id]) 
 )
 GO
 ALTER TABLE [dbo].[usuario] WITH CHECK ADD FOREIGN KEY([id_perfil]) REFERENCES [dbo].[perfil] ([id])
@@ -150,4 +168,7 @@ ALTER TABLE [dbo].[produto] WITH CHECK ADD FOREIGN KEY([id_marca]) REFERENCES [d
 GO
 ALTER TABLE [dbo].[produto] WITH CHECK ADD FOREIGN KEY([id_unidade_medida]) REFERENCES [dbo].[unidade_medida] ([id])
 GO
-
+CREATE SEQUENCE [dbo].[SEC_entrada_produto] AS [int] START WITH 1 INCREMENT BY 1
+GO
+CREATE SEQUENCE [dbo].[SEC_saida_produto] AS [int] START WITH 1 INCREMENT BY 1
+GO

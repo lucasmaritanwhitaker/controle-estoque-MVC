@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using ControleEstoque.Web.Helpers;
+using System.Linq;
+using System.Web;
 
 namespace ControleEstoque.Web.Models
 {
@@ -37,7 +40,7 @@ namespace ControleEstoque.Web.Models
             return ret;
         }
 
-        public static List<UnidadeMedidaModel> RecuperarLista(int pagina, int tamPagina)
+        public static List<UnidadeMedidaModel> RecuperarLista(int pagina, int tamPagina, string ordem = "")
         {
             var ret = new List<UnidadeMedidaModel>();
 
@@ -51,7 +54,10 @@ namespace ControleEstoque.Web.Models
 
                     comando.Connection = conexao;
                     comando.CommandText = string.Format(
-                        "select * from unidade_medida order by nome offset {0} rows fetch next {1} rows only",
+                        "select *" +
+                        " from unidade_medida" +
+                        " order by " + (!string.IsNullOrEmpty(ordem) ? ordem : "nome") +
+                        " offset {0} rows fetch next {1} rows only",
                         pos > 0 ? pos - 1 : 0, tamPagina);
                     var reader = comando.ExecuteReader();
                     while (reader.Read())

@@ -149,7 +149,6 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\CadastroController.cs" />
     <Compile Include="Controllers\Cadastro\CadCidadeController.cs" />
     <Compile Include="Controllers\Cadastro\CadEstadoController.cs" />
     <Compile Include="Controllers\Cadastro\CadGrupoProdutoController.cs" />
@@ -165,13 +164,18 @@
     <Compile Include="Controllers\GraficoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OperacaoController.cs" />
+    <Compile Include="Controllers\Operacao\OperEntradaSaidaProdutoController.cs" />
+    <Compile Include="Controllers\Operacao\OperSaidaProdutoController.cs" />
+    <Compile Include="Controllers\Operacao\OperEntradaProdutoController.cs" />
     <Compile Include="Controllers\RelatorioController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\CriptoHelper.cs" />
     <Compile Include="Models\AlteracaoSenhaUsuarioViewModel.cs" />
+    <Compile Include="Models\Binders\EntradaSaidaProdutoViewModelModelBinder.cs" />
     <Compile Include="Models\CidadeModel.cs" />
+    <Compile Include="Models\EntradaSaidaProdutoViewModel.cs" />
     <Compile Include="Models\EsqueciMinhaSenhaViewModel.cs" />
     <Compile Include="Models\FornecedorModel.cs" />
     <Compile Include="Models\GrupoProdutoModel.cs" />
@@ -232,6 +236,7 @@
     <Content Include="Scripts\Cadastro\Produto.js" />
     <Content Include="Scripts\Cadastro\UnidadeMedida.js" />
     <Content Include="Scripts\Cadastro\Usuario.js" />
+    <Content Include="Scripts\comum.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -265,10 +270,8 @@
     <Content Include="Views\CadUsuario\Index.cshtml" />
     <Content Include="Views\Grafico\PerdaMes.cshtml" />
     <Content Include="Views\Grafico\EntradaSaidaMesa.cshtml" />
-    <Content Include="Views\Operacao\EntradaEstoque.cshtml" />
     <Content Include="Views\Operacao\LancPerdaProduto.cshtml" />
     <Content Include="Views\Operacao\Inventario.cshtml" />
-    <Content Include="Views\Operacao\SaidaEstoque.cshtml" />
     <Content Include="Views\Relatorio\PosicaoEstoque.cshtml" />
     <Content Include="Views\Relatorio\Ressuprimento.cshtml" />
     <Content Include="Views\Conta\Login.cshtml" />
@@ -285,9 +288,12 @@
     <Content Include="Views\Conta\EsqueciMinhaSenha.cshtml" />
     <Content Include="Views\Conta\RedefinirSenha.cshtml" />
     <Content Include="Views\CadProduto\Index.cshtml" />
+    <Content Include="Views\OperEntradaProduto\Index.cshtml" />
+    <Content Include="Views\OperSaidaProduto\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\Imagens\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -314,7 +320,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>50323</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:11111/controle-estoque</IISUrl>
+          <IISUrl>http://localhost:50040/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

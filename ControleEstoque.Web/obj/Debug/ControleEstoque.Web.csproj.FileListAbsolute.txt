@@ -48,7 +48,6 @@ C:\Users\lucasmaritan\OneDrive\Área de Trabalho\CE\controle-estoque\ControleEst
 C:\Users\lucasmaritan\OneDrive\Área de Trabalho\CE\controle-estoque\ControleEstoque.Web\bin\System.Web.WebPages.Razor.xml
 C:\Users\lucasmaritan\OneDrive\Área de Trabalho\CE\controle-estoque\ControleEstoque.Web\bin\Antlr3.Runtime.pdb
 C:\Users\lucasmaritan\OneDrive\Área de Trabalho\CE\controle-estoque\ControleEstoque.Web\bin\Newtonsoft.Json.xml
-C:\Users\lucasmaritan\OneDrive\Área de Trabalho\CE\controle-estoque\ControleEstoque.Web\obj\Debug\ControleEstoque.Web.csproj.AssemblyReference.cache
 C:\Users\lucasmaritan\OneDrive\Área de Trabalho\CE\controle-estoque\ControleEstoque.Web\obj\Debug\ControleEstoque.Web.csproj.CoreCompileInputs.cache
 C:\Users\lucasmaritan\OneDrive\Área de Trabalho\CE\controle-estoque\ControleEstoque.Web\obj\Debug\ControleEstoque.Web.csproj.CopyComplete
 C:\Users\lucasmaritan\OneDrive\Área de Trabalho\CE\controle-estoque\ControleEstoque.Web\obj\Debug\ControleEstoque.Web.dll
