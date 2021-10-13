@@ -105,8 +105,15 @@ namespace ControleEstoque.Web.Controllers
                         idSalvo = id.ToString();
                         if (!string.IsNullOrEmpty(nomeArquivoImagem) && arquivo != null)
                         {
-                            var caminhoArquivo = Path.Combine(Server.MapPath("~/Content/Imagens"), nomeArquivoImagem);
-                            arquivo.SaveAs(caminhoArquivo);
+                            //var caminhoArquivo = Path.Combine(Server.MapPath("~/Content/Imagens"), nomeArquivoImagem);
+                            var caminhoArquivo = Path.Combine(Server.MapPath("~/Content/Imagens"));
+
+                            if (!Directory.Exists(caminhoArquivo))
+                            {
+                                Directory.CreateDirectory(caminhoArquivo);
+                            }
+
+                            arquivo.SaveAs($"{caminhoArquivo}\\{nomeArquivoImagem}");
                         }
                     }
                     else
