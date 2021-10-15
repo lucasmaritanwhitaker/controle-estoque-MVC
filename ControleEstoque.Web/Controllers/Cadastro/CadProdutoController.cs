@@ -1,4 +1,5 @@
-﻿using ControleEstoque.Web.Models;
+﻿using AutoMapper;
+using ControleEstoque.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,25 +20,25 @@ namespace ControleEstoque.Web.Controllers
             ViewBag.QuantMaxLinhasPorPagina = _quantMaxLinhasPorPagina;
             ViewBag.PaginaAtual = 1;
 
-            var lista = ProdutoModel.RecuperarLista(ViewBag.PaginaAtual, _quantMaxLinhasPorPagina);
+            var lista = Mapper.Map<List<ProdutoViewModel>>(ProdutoModel.RecuperarLista(ViewBag.PaginaAtual, _quantMaxLinhasPorPagina));
             var quant = ProdutoModel.RecuperarQuantidade();
 
             var difQuantPaginas = (quant % ViewBag.QuantMaxLinhasPorPagina) > 0 ? 1 : 0;
             ViewBag.QuantPaginas = (quant / ViewBag.QuantMaxLinhasPorPagina) + difQuantPaginas;
-            ViewBag.UnidadesMedida = UnidadeMedidaModel.RecuperarLista(1, 9999);
-            ViewBag.Grupos = GrupoProdutoModel.RecuperarLista(1, 9999);
-            ViewBag.Marcas = MarcaProdutoModel.RecuperarLista(1, 9999);
-            ViewBag.Fornecedores = FornecedorModel.RecuperarLista();
-            ViewBag.LocaisArmazenamento = LocalArmazenamentoModel.RecuperarLista(1, 9999);
+            ViewBag.UnidadesMedida = Mapper.Map<List<UnidadeMedidaViewModel>>(UnidadeMedidaModel.RecuperarLista(1, 9999));
+            ViewBag.Grupos = Mapper.Map<List<GrupoProdutoViewModel>>(GrupoProdutoModel.RecuperarLista(1, 9999));
+            ViewBag.Marcas = Mapper.Map<List<MarcaProdutoViewModel>>(MarcaProdutoModel.RecuperarLista(1, 9999));
+            ViewBag.Fornecedores = Mapper.Map<List<FornecedorViewModel>>(FornecedorModel.RecuperarLista());
+            ViewBag.LocaisArmazenamento = Mapper.Map<List<LocalArmazenamentoViewModel>>(LocalArmazenamentoModel.RecuperarLista(1, 9999));
 
             return View(lista);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult ProdutoPagina(int pagina, int tamPag, string ordem)
+        public JsonResult ProdutoPagina(int pagina, int tamPag, string filtro, string ordem)
         {
-            var lista = ProdutoModel.RecuperarLista(pagina, tamPag, ordem: ordem);
+            var lista = Mapper.Map<List<ProdutoViewModel>>(ProdutoModel.RecuperarLista(pagina, tamPag, filtro, ordem));
 
             return Json(lista);
         }
@@ -46,7 +47,9 @@ namespace ControleEstoque.Web.Controllers
         [ValidateAntiForgeryToken]
         public JsonResult RecuperarProduto(int id)
         {
-            return Json(ProdutoModel.RecuperarPeloId(id));
+            var vm = Mapper.Map<ProdutoViewModel>(ProdutoModel.RecuperarPeloId(id));
+
+            return Json(vm);
         }
 
         [HttpPost]
@@ -70,7 +73,7 @@ namespace ControleEstoque.Web.Controllers
             if (Request.Files.Count > 0)
             {
                 arquivo = Request.Files[0];
-                nomeArquivoImagem = Path.GetFileName(arquivo.FileName);
+                nomeArquivoImagem = Guid.NewGuid().ToString() + ".jpg";
             }
 
             var model = new ProdutoModel()
@@ -99,21 +102,28 @@ namespace ControleEstoque.Web.Controllers
             {
                 try
                 {
+                    var nomeArquivoImagemAnterior = "";
+                    if (model.Id > 0)
+                    {
+                        nomeArquivoImagemAnterior = ProdutoModel.RecuperarImagemPeloId(model.Id);
+                    }
+
                     var id = model.Salvar();
                     if (id > 0)
                     {
                         idSalvo = id.ToString();
                         if (!string.IsNullOrEmpty(nomeArquivoImagem) && arquivo != null)
                         {
-                            //var caminhoArquivo = Path.Combine(Server.MapPath("~/Content/Imagens"), nomeArquivoImagem);
-                            var caminhoArquivo = Path.Combine(Server.MapPath("~/Content/Imagens"));
+                            var diretorio = Server.MapPath("~/Content/Imagens");
 
-                            if (!Directory.Exists(caminhoArquivo))
+                            var caminhoArquivo = Path.Combine(diretorio, nomeArquivoImagem);
+                            arquivo.SaveAs(caminhoArquivo);
+
+                            if (!string.IsNullOrEmpty(nomeArquivoImagemAnterior))
                             {
-                                Directory.CreateDirectory(caminhoArquivo);
+                                var caminhoArquivoAnterior = Path.Combine(diretorio, nomeArquivoImagemAnterior);
+                                System.IO.File.Delete(caminhoArquivoAnterior);
                             }
-
-                            arquivo.SaveAs($"{caminhoArquivo}\\{nomeArquivoImagem}");
                         }
                     }
                     else

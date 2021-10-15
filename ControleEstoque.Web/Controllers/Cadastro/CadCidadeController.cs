@@ -1,4 +1,5 @@
-﻿using ControleEstoque.Web.Models;
+﻿using AutoMapper;
+using ControleEstoque.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,16 +23,16 @@ namespace ControleEstoque.Web.Controllers
 
             var difQuantPaginas = (quant % ViewBag.QuantMaxLinhasPorPagina) > 0 ? 1 : 0;
             ViewBag.QuantPaginas = (quant / ViewBag.QuantMaxLinhasPorPagina) + difQuantPaginas;
-            ViewBag.Paises = PaisModel.RecuperarLista();
+            ViewBag.Paises = Mapper.Map<List<PaisViewModel>>(PaisModel.RecuperarLista());
 
             return View(lista);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult CidadePagina(int pagina, int tamPag, string ordem)
+        public JsonResult CidadePagina(int pagina, int tamPag, string filtro, string ordem)
         {
-            var lista = CidadeModel.RecuperarLista(pagina, tamPag, ordem: ordem);
+            var lista = CidadeModel.RecuperarLista(pagina, tamPag, filtro, ordem);
 
             return Json(lista);
         }
@@ -40,7 +41,9 @@ namespace ControleEstoque.Web.Controllers
         [ValidateAntiForgeryToken]
         public JsonResult RecuperarCidade(int id)
         {
-            return Json(CidadeModel.RecuperarPeloId(id));
+            var vm = CidadeModel.RecuperarPeloId(id);
+
+            return Json(vm);
         }
 
         [HttpPost]
@@ -62,7 +65,7 @@ namespace ControleEstoque.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult SalvarCidade(CidadeModel model)
+        public JsonResult SalvarCidade(CidadeViewModel model)
         {
             var resultado = "OK";
             var mensagens = new List<string>();
@@ -77,7 +80,8 @@ namespace ControleEstoque.Web.Controllers
             {
                 try
                 {
-                    var id = model.Salvar();
+                    var vm = Mapper.Map<CidadeModel>(model);
+                    var id = vm.Salvar();
                     if (id > 0)
                     {
                         idSalvo = id.ToString();
